@@ -14,6 +14,17 @@ type Result struct {
 	Url   string
 }
 
+func main() {
+	urls := []string{"http://qiita.com/advent-calendar/2013/"}
+	ch := GoGet(urls)
+	for {
+		_, ok := <-ch
+		if !ok {
+			return
+		}
+	}
+}
+
 func ParseItem(r io.Reader) []Result {
 	results := []Result{}
 	doc, err := html.Parse(r)
@@ -116,15 +127,4 @@ func GoGet(urls []string) <-chan string {
 		close(ch)
 	}()
 	return ch
-}
-
-func main() {
-	urls := []string{"http://qiita.com/advent-calendar/2013/"}
-	ch := GoGet(urls)
-	for {
-		_, ok := <-ch
-		if !ok {
-			return
-		}
-	}
 }
